@@ -1,0 +1,253 @@
+:root {
+	--yellow-1: yellow;
+}
+
+body,
+html {
+	margin: 0;
+	height: 100%;
+	align-items: center; /* Vertically center */
+	justify-content: center; /* Horizontally center */
+	perspective: 1000px; /* Enable 3D effect */
+	overflow: hidden; /* Prevent scrollbars */
+	background-color: black;
+
+	font-family: "Noto Sans", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: bold;
+	font-style: normal;
+	font-variation-settings: "wdth" 100;
+}
+
+body {
+	background: radial-gradient(circle, #440040, #110020);
+}
+
+*::-webkit-scrollbar {
+	width: 1em;
+}
+*::-webkit-scrollbar-track {
+	box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+*::-webkit-scrollbar-thumb {
+	background-color: #7d4caf;
+	outline: 1px solid rgb(0, 25, 124);
+}
+
+canvas#backgroundCanvas {
+	background-color: transparent;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: -2; /* Send canvas to background */
+}
+
+div.debug {
+	position: fixed;
+	z-index: 1; /* Send canvas to background */
+	color: white;
+	font-family: monospace;
+	background-color: black;
+	font-size: 2em;
+}
+
+div.debug-1 {
+	display: none;
+	bottom: 0;
+	left: 0;
+	padding: 0.8em;
+	background-color: #0000006f;
+}
+
+div.debug-2 {
+	display: none;
+	top: 0;
+	left: 0;
+	right: 0;
+	padding: 0;
+	background-color: transparent;
+}
+
+.content {
+	margin: 0;
+	height: 100%;
+	align-items: center; /* Vertically center */
+	display: flex;
+	justify-content: center; /* Horizontally center */
+	perspective: 1000px; /* Enable 3D effect */
+	overflow: hidden; /* Prevent scrollbars */
+}
+/* Container that holds both front and back faces */
+.centered-div {
+	width: 300px;
+	height: 300px;
+	position: relative;
+	transform-style: preserve-3d;
+	transition: transform 0.8s ease-in-out; /* Smooth flip animation */
+	border-radius: 10px;
+	box-shadow: 0 0 18px white;
+}
+
+/* Styling for the front and back faces */
+.front,
+.back {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	backface-visibility: hidden; /* Hide the back face when flipped */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	font-size: 20px;
+	border-radius: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	background-color: #f2efff;
+}
+
+/* Styling for the back face */
+.back {
+	transform: rotateY(180deg); /* Position the back face */
+	font-family: sans-serif;
+	padding: 0.5em;
+}
+
+.chord {
+	font-size: 160%;
+}
+
+.title {
+	text-align: center;
+	user-select: none;
+	filter: grayscale(100%); /* remove color from emojis */
+}
+
+/* Flip the .centered-div when the flipped class is added */
+.flipped {
+	transform: rotateY(180deg);
+}
+
+/* Optional form styling */
+form {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+input,
+button,
+select {
+	padding: 10px;
+	border-radius: 5px;
+	font-weight: bold;
+	font-size: 0.9em;
+}
+
+button {
+	cursor: pointer;
+	padding: 5px;
+	font-size: 1.2em;
+	border: 0px;
+	background-color: transparent;
+}
+button.ok {
+	cursor: pointer;
+	padding: 5px;
+	border: 2px solid #8b4caf;
+	background-color: #fbd0ff;
+
+	border-radius: 5px;
+	font-size: 1.2em;
+}
+
+.button-gray > span {
+	filter: grayscale(1);
+}
+
+.button-large > span {
+	font-size: 1em;
+}
+
+select {
+	width: 100%;
+}
+
+.menu {
+	text-align: center;
+	font-size: 1.3em;
+}
+.menu > button {
+	filter: grayscale(100%); /* remove color from emojis */
+}
+
+/* Button-style Toggle */
+.toggle-button {
+	padding: 0.2em;
+	min-width: 1em;
+	display: inline-block;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	background-color: #f0f0f0;
+	text-align: center;
+	cursor: pointer;
+	transition: all 0.12s ease-in-out;
+	user-select: none;
+}
+
+/* Highlighted Style for the Button when Enabled */
+.toggle-button.active {
+	background-color: #7d4caf;
+	border-color: #8b4caf;
+	color: white;
+}
+.toggle-button.active > span {
+	filter: none;
+}
+
+line.staff-line {
+	stroke: rgb(105, 105, 105);
+	stroke-width: 2;
+}
+ellipse.note {
+	fill: black;
+}
+ellipse.noteMic {
+	fill: #8b4caf;
+}
+
+#help {
+	visibility: hidden;
+	position: fixed;
+	left: 0em;
+	right: 0em;
+	top: 0em;
+	bottom: 0em;
+	background-color: #19003a;
+	color: #7d4caf;
+	padding: 0.5em;
+	overflow-y: auto;
+}
+
+#help > p,
+#help > ol {
+	font-size: 120%;
+}
+
+#help .close {
+	padding: 1em;
+	display: inline-block;
+	border: 1px solid white;
+	border-radius: 5px;
+	color: white;
+}
+
+#footer {
+	position: fixed;
+	right: 0.5em;
+	bottom: 0.3em;
+	color: white;
+}
+
+#footer a {
+	color: #330079;
+}

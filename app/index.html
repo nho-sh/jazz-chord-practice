@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>🇯​🇦​💤 Chord Practice</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+		/>
+		<link rel="stylesheet" href="./style.css" />
+	</head>
+	<body>
+		<canvas id="backgroundCanvas"></canvas>
+
+		<div class="content">
+			<div id="flip-box" class="centered-div">
+				<!-- Front side -->
+				<div class="front">
+					<div id="chord" class="chord"></div>
+
+					<div class="staff">
+						<svg
+							id="staff"
+							width="200"
+							height="180"
+							viewBox="0 0 200 180"
+						>
+							<!-- Draw the 5 staff lines -->
+							<line
+								x1="20"
+								y1="50"
+								x2="180"
+								y2="50"
+								class="staff-line"
+							/>
+							<line
+								x1="20"
+								y1="70"
+								x2="180"
+								y2="70"
+								class="staff-line"
+							/>
+							<line
+								x1="20"
+								y1="90"
+								x2="180"
+								y2="90"
+								class="staff-line"
+							/>
+							<line
+								x1="20"
+								y1="110"
+								x2="180"
+								y2="110"
+								class="staff-line"
+							/>
+							<line
+								x1="20"
+								y1="130"
+								x2="180"
+								y2="130"
+								class="staff-line"
+							/>
+
+							<!-- microphone detected note -->
+							<ellipse
+								id="noteMic"
+								class="note noteMic"
+								cx="135"
+								cy="150"
+								rx="12"
+								ry="8"
+							/>
+
+							<!-- Extra helper lines -->
+							<line
+								x1="82"
+								y1="10"
+								x2="117"
+								y2="10"
+								class="staff-line"
+							/>
+							<line
+								x1="82"
+								y1="30"
+								x2="117"
+								y2="30"
+								class="staff-line"
+							/>
+							<line
+								x1="82"
+								y1="150"
+								x2="117"
+								y2="150"
+								class="staff-line"
+							/>
+						</svg>
+
+						<div class="menu">
+							<button
+								type="button"
+								onclick="recreate()"
+								title="Skip to next chord (press SPACE)"
+								class="button-gray"
+							>
+								<span>⏭︎</span>
+								<!-- ⟳ -->
+							</button>
+
+							<button
+								type="button"
+								onclick="flipUserInterface()"
+								class="button-gray"
+							>
+								<span>⚙️</span>
+							</button>
+
+							<button
+								type="button"
+								onclick="showHelp()"
+								class="button-gray"
+							>
+								<span>❔</span>
+							</button>
+						</div>
+					</div>
+				</div>
+				<!-- Back side with form -->
+				<div class="back">
+					<div class="title">🇯​🇦​💤 Chord Practice</div>
+					<br />
+
+					<!--
+					😌🙂😏😅😬😓😰🥵🤯😱💀
+					-->
+					<form>
+						<div>
+							<difficulty-button
+								elid="toggleDifficulty1"
+								label="😌"
+							></difficulty-button>
+
+							<difficulty-button
+								elid="toggleDifficulty2"
+								label="🙂"
+							></difficulty-button>
+
+							<difficulty-button
+								elid="toggleDifficulty3"
+								label="😅"
+							></difficulty-button>
+
+							<difficulty-button
+								elid="toggleDifficulty4"
+								label="💪"
+							></difficulty-button>
+
+							<difficulty-button
+								elid="toggleDifficulty5"
+								label="😰"
+							></difficulty-button>
+							<difficulty-button
+								elid="toggleDifficulty6"
+								label="🥵"
+							></difficulty-button>
+
+							<difficulty-button
+								elid="toggleDifficulty7"
+								label="💀"
+							></difficulty-button>
+						</div>
+						<div>
+							<select id="selectSongChords">
+								<option value="" style="font-style: italic">
+									(or pick song chords)
+								</option>
+								<option value="autumn_leaves">
+									Autumn Leaves - Johnny Mercer
+								</option>
+								<option value="doxy">Doxy - Sonny Rollins</option>
+								<option value="in_a_sentimental_mood">
+									In a Sentimental Mood - Duke Ellington
+								</option>
+								<option value="misty">Misty - Erroll Garner</option>
+								<option value="moanin">Moanin' - Charles Mingus</option>
+								<option value="st_thomas">
+									St. Thomas - Sonny Rollins
+								</option>
+								<option value="summertime">
+									Summertime - George Gershwin
+								</option>
+								<option value="take_five">
+									Take Five - Paul Desmond
+								</option>
+								<option value="take_the_a_train">
+									Take the &quot;A&quot; Train - Duke Ellington
+								</option>
+								<option value="the_girl_from_ipanema">
+									The Girl From Ipanema - Antonio Carlos Jobim
+								</option>
+								<option value="wave">
+									Wave - Antonio Carlos Jobim
+								</option>
+								<option value="yardbird_suite">
+									Yardbird Suite - Charlie Parker
+								</option>
+							</select>
+						</div>
+
+						<br />
+
+						<div>
+							<select
+								id="transposition"
+								onchange="updateTransposition()"
+							>
+								<option value="-6">F#</option>
+								<option value="-5">
+									F - French Horn, English Horn
+								</option>
+								<option value="-4">E - Alto Flute</option>
+								<option value="-3">
+									Eb - Alto/Bari sax, Alto Clarinet
+								</option>
+								<option value="-2">D</option>
+								<option value="-1">C#</option>
+								<option value="0">
+									C - No transposition, Flute, Oboe, Bassoon, Trombone
+								</option>
+								<option value="1">B</option>
+								<option value="2">
+									Bb - Soprano/Tenor Sax, Bass Clarinet, Ephonium,
+									Cornet, Trumpet, Flugelhorn
+								</option>
+								<option value="3">A</option>
+								<option value="4">Ab</option>
+								<option value="5">
+									G - Alto Flute, Horn in F, English Horn
+								</option>
+							</select>
+						</div>
+
+						<!-- this.blur() is to re-allow space to pick a next chord-->
+						<button
+							class="ok button-gray"
+							type="button"
+							onclick="this.blur(); flipUserInterface()"
+						>
+							<span>🎶</span>
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div id="debug1" class="debug debug-1" onclick="toggleDebug()">
+			<div id="currentvolume">Volume: 00</div>
+			<div id="currentnote">00</div>
+			<div id="currentchord">00</div>
+		</div>
+		<div id="debug2" class="debug debug-2" onclick="toggleDebug()">
+			<canvas id="currentspectrum" width="1290" height="256"></canvas>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/tonal@6.3.0/browser/tonal.min.js"></script>
+
+		<script src="./constants.js"></script>
+		<script src="./state.js"></script>
+		<script src="./staff.js"></script>
+		<script src="./chord_lib.js"></script>
+		<script src="./chord_engine.js"></script>
+		<script src="./ui.js"></script>
+		<script src="./note_engine.js"></script>
+		<script src="./microphone.js"></script>
+		<script src="./stars.js"></script>
+
+		<script>
+			initializeUI();
+			initializeStaff();
+			initializeState();
+		</script>
+
+		<div id="help" onclick="closeHelp()">
+			<div>
+				<h1>🇯​🇦​💤 Chord Practice</h1>
+
+				<p>Train your chord sight-reading</p>
+
+				<ol>
+					<li>Pick your difficulty level</li>
+					<li>
+						Set up transposition (if you play a transposing instrument)
+					</li>
+					<li>Practice a difficulty until you master it</li>
+					<li>Repeat step 1</li>
+				</ol>
+
+				<p>You can also practice the chords of some songs</p>
+
+				<p>Practive variations:</p>
+
+				<ol>
+					<li>Random chord note order</li>
+					<li>Root -> Seventh -> Fifth -> Third</li>
+					<li>Root -> Fifth -> Third</li>
+				</ol>
+
+				<p>
+					<em>(Tap/click anywhere to close this window) </em>
+				</p>
+
+				&nbsp;
+
+				<div style="text-align: center">
+					<span class="close">Close</span>
+				</div>
+
+				<u> Legend: </u>
+				<ul>
+					<li>major</li>
+					<ul>
+						<li>M</li>
+						<li>^</li>
+						<li>maj</li>
+					</ul>
+					<li>minor</li>
+					<ul>
+						<li>m</li>
+						<li>min</li>
+						<li>-</li>
+					</ul>
+					<li>major seventh</li>
+					<ul>
+						<li>maj7</li>
+						<li>Δ</li>
+						<li>ma7</li>
+						<li>M7</li>
+						<li>Maj7</li>
+						<li>^7</li>
+					</ul>
+					<li>dominant seventh</li>
+					<ul>
+						<li>7</li>
+						<li>dom</li>
+					</ul>
+					<li>minor seventh</li>
+					<ul>
+						<li>m7</li>
+						<li>min7</li>
+						<li>mi7</li>
+						<li>-7</li>
+					</ul>
+					<li>minor sixth</li>
+					<ul>
+						<li>m6</li>
+						<li>-6</li>
+					</ul>
+					<li>augmented</li>
+					<ul>
+						<li>aug</li>
+						<li>+</li>
+						<li>+5</li>
+						<li>^#5</li>
+					</ul>
+					<li>diminished</li>
+					<ul>
+						<li>dim</li>
+						<li>°</li>
+						<li>o</li>
+					</ul>
+					<li>suspended fourth</li>
+					<ul>
+						<li>sus4</li>
+						<li>sus</li>
+					</ul>
+					<li>sixth</li>
+					<ul>
+						<li>6</li>
+						<li>add6</li>
+						<li>add13</li>
+						<li>M6</li>
+					</ul>
+					<li>dominant ninth</li>
+					<ul>
+						<li>9</li>
+					</ul>
+					<li>flat ninth</li>
+					<ul>
+						<li>b9</li>
+					</ul>
+					<li>major ninth</li>
+					<ul>
+						<li>maj9</li>
+						<li>Δ9</li>
+						<li>^8</li>
+					</ul>
+					<li>half-diminished</li>
+					<ul>
+						<li>m7b5</li>
+						<li>ø</li>
+						<li>-7b5</li>
+						<li>h7</li>
+						<li>h</li>
+					</ul>
+					<li>minor/major seventh</li>
+					<ul>
+						<li>m/m7</li>
+						<li>m/maj7</li>
+						<li>mM7</li>
+						<li>mMaj7</li>
+						<li>m/M7</li>
+						<li>-Δ7</li>
+						<li>mΔ</li>
+						<li>-^7</li>
+						<li>-maj7</li>
+					</ul>
+				</ul>
+			</div>
+		</div>
+
+		<div id="footer">
+			<a target="_blank" href="https://github.com/nho-sh/github-pr-reviewer/"
+				>© 2024 nhosh</a
+			>
+		</div>
+	</body>
+</html>
