@@ -8,9 +8,9 @@ const ChordLib = {
 	// "C C# Db D Eb E F F# Gb G Ab A Bb B"
 
 	1: "A Ab B Bb C C# D Db E Eb F F# G Gb",
-	2: "Abmaj7 Amaj7 Bbmaj7 Bmaj7 C#maj7 Cmaj7 Dbmaj7 Dmaj7 Ebmaj7 Emaj7 F#maj7 Fmaj7 Gbmaj7 Gmaj7",
-	3: "A7 Ab7 B7 Bb7 C#7 C7 D7 Db7 E7 Eb7 F#7 F7 G7 Gb7",
-	4: "Abm Am Bbm Bm C#m Cm Dbm Dm Ebm Em F#m Fm Gbm Gm",
+	2: "Abm Am Bbm Bm C#m Cm Dbm Dm Ebm Em F#m Fm Gbm Gm",
+	3: "Abmaj7 Amaj7 Bbmaj7 Bmaj7 C#maj7 Cmaj7 Dbmaj7 Dmaj7 Ebmaj7 Emaj7 F#maj7 Fmaj7 Gbmaj7 Gmaj7",
+	4: "A7 Ab7 B7 Bb7 C#7 C7 D7 Db7 E7 Eb7 F#7 F7 G7 Gb7",
 	5: "Aaug Abaug Abdim Adim Baug Bbaug Bbdim Bdim C#aug C#dim Caug Cdim Daug Dbaug Dbdim Ddim Eaug Ebaug Ebdim Edim F#aug F#dim Faug Fdim Gaug Gbaug Gbdim Gdim",
 	// TODO: are these ambiguous?
 	6: "Absus4 Asus4 Bbsus4 Bsus4 C#sus4 Csus4 Dbsus4 Dsus4 Ebsus4 Esus4 F#sus4 Fsus4 Gbsus4 Gsus4",
@@ -31,8 +31,35 @@ const ChordLib = {
 	the_girl_from_ipanema:
 		"A-7 B7 C7b9 D7 D7b9 Eb7 F#-7 Fmaj7 G-7 G7 Gb7 Gbmaj7 Gmaj7",
 	wave: "A A-7 A7 A7b9 Ab B-7 B7b9 B9 Bb Bb9 Bb°7 C9 D-7 D7b9 Dmaj7 E E7 Ebmaj7 F#+7 F#13 F-7 Fmaj7 G G-6 G-7 G13 Gmaj7",
-	yardbird_suite: "A7 B7b9 Bb7 C6 C7 D-7 D7 E-7 Eo7 F#o7 F-7 G7",
+	yardbird_suite: "A7 B7b9 Bb7 C6 C7 D-7 D7 E-7 E°7 F#°7 F-7 G7",
 };
+
+const UnusedChordAliases = [
+	// Triads
+	// Keep C Cm
+	"Maj",
+	"maj",
+	"M",
+	"^",
+
+	"-",
+	"min",
+
+	// Sevenths
+	// Keep Maj7 ^ 7
+	"maj",
+	"M7",
+	"ma7",
+	"Δ",
+	"dom",
+
+	// Keep m7, m7b5 °7
+	// ""
+
+	// 
+	"o",
+	
+];
 
 // Parsing &
 // some sense checking for flaws

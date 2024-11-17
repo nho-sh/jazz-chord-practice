@@ -6,9 +6,36 @@ function transposeChordAndRandomizeNotation(chord) {
 	);
 }
 
+function getChordAlias(chord, forceDifferent) {
+	const { tonic, aliases } = Tonal.Chord.get(chord);
+
+	// Although there are lots of theoretical and rare used
+	// notations, these are not desired in this excercise,
+	// as it complicates things for the student without much value
+	const allowedAliases = aliases.filter((a) => !UnusedChordAliases.includes(a));
+	
+	console.log(chord, aliases);
+
+	if (allowedAliases.length === 0) {
+		// No candidates
+		return chord;
+	}
+
+	const differentChord = tonic + allowedAliases[Math.floor(Math.random() * allowedAliases.length)];
+
+	if (forceDifferent && allowedAliases.length > 1 && chord === differentChord) {
+		// random new one is actually the same?
+		// then try again, recursively
+		return getChordAlias(chord, forceDifferent);
+	}
+
+	return differentChord
+}
+
 function prepareRandomChord(difficultyOrSong) {
 	let chordLib = ChordLib[difficultyOrSong];
 
+	// Pick a random chord within the difficulty
 	const chord = chordLib[Math.floor(Math.random() * chordLib.length)];
 
 	// only transpose if its a song
@@ -18,8 +45,7 @@ function prepareRandomChord(difficultyOrSong) {
 	} else {
 		// do not transpose, but randomize the notation
 		// maj -> M -> ma
-		const { tonic, aliases } = Tonal.Chord.get(chord);
-		State.Chord = tonic + aliases[Math.floor(Math.random() * aliases.length)];
+		State.Chord = getChordAlias(chord, false);
 	}
 
 	// Working test cases

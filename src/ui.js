@@ -42,6 +42,10 @@ function initializeUI() {
 				storeSetting("difficulty", State.Difficulty.toString());
 
 				button.classList.toggle("active"); // Toggle active class to change button style
+
+				// When the user picks a different difficulty level
+				// we immediatly prepare a new chord
+				recreate();
 			}
 		});
 	});
@@ -60,8 +64,13 @@ function initializeUI() {
 			// Set value equal to a string
 			State.Difficulty = val;
 			storeSetting("difficulty", State.Difficulty.toString());
+
+			// When the user picks a song
+			// we immediatly prepare a new chord from that song
+			recreate();
 		}
 	};
+
 	if (Number.isInteger(parseInt(State.Difficulty, 10))) {
 		document
 			.getElementById(prefix + State.Difficulty)
@@ -83,6 +92,13 @@ function initializeUI() {
 	document.getElementById("transposition").value =
 		State.TranspositionAmount.toString();
 	console.log("Transposition is " + State.TranspositionAmount);
+
+	// Clicking the chord shows a alias for that chord
+	document.getElementById('chord').addEventListener('click', () => {
+		const newAlias = getChordAlias(State.Chord, true);
+		document.getElementById("chord").innerText = newAlias;
+		document.getElementById("chord").title = newAlias;
+	});
 
 	document.addEventListener("keypress", function (event) {
 		State.LastInteraction = Date.now();

@@ -114,6 +114,10 @@ div.debug-2 {
 
 .chord {
 	font-size: 160%;
+	user-select: none;
+	cursor: pointer;
+	min-width: 4em;
+	text-align: center;
 }
 
 .title {
@@ -180,9 +184,12 @@ select {
 	filter: grayscale(100%); /* remove color from emojis */
 }
 
+.difficulty-buttons {
+	text-align: center;
+}
 /* Button-style Toggle */
 .toggle-button {
-	padding: 0.2em;
+	padding: 0.1em;
 	min-width: 1em;
 	display: inline-block;
 	border: 1px solid #ddd;
@@ -192,6 +199,7 @@ select {
 	cursor: pointer;
 	transition: all 0.12s ease-in-out;
 	user-select: none;
+	font-size: 24px;
 }
 
 /* Highlighted Style for the Button when Enabled */
@@ -203,6 +211,11 @@ select {
 .toggle-button.active > span {
 	filter: none;
 }
+
+.transposition-container {
+	margin-top: 1em;
+}
+
 
 line.staff-line {
 	stroke: rgb(105, 105, 105);

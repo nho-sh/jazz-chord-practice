@@ -24,6 +24,10 @@ const startMic = async () => {
 	// A mapping from the frequency bins to the matching frequency
 	// (For performance reasons)
 	const freqBinToFrequency = [];
+	// For optimization reasons, we will once precompute the bin range
+	// we care about
+	let lowestBinIndex = 0;
+	let highestBinIndex = analyser.frequencyBinCount;
 	// Precompute the frequency of every bin
 	for (let i = 0; i < analyserFrequencyBinCount; i++) {
 		freqBinToFrequency[i] = (i * ac.sampleRate) / analyser.fftSize;
@@ -31,12 +35,26 @@ const startMic = async () => {
 		if (freqBinToFrequency[i] <= 30) {
 			// The frequency below 30Hz, is not made by most instruments,
 			// so we can ignore it
-			freqBinToFrequency[i] = 0;
+			freqBinToFrequency[i] = -1;
+
+			// Precompute lowest bin for perf later
+			lowestBinIndex = Math.max(lowestBinIndex, i);
 		}
-		if (freqBinToFrequency[i] > 4800) {
+		if (freqBinToFrequency[i] > 8000) {
 			// The frequency above 4800z, is not made by most instruments,
-			// so we can ignore it
-			freqBinToFrequency[i] = 0;
+			// so we can ignore it. But we do have to take account for at
+			// least a few overtones in order to do overtone detection later
+			// on.
+			// A standard piano for example, goes up  to C8, which is 4186Hz.
+			// Taking overtones for that, we would quickly reach the microphones
+			// upper limit, and this is not a useful spot to be practicing chord
+			// reading anyway.
+			// As such, we can go lower, to something like a B6, then the forth
+			// overtone is around 8000Hz
+			freqBinToFrequency[i] = -1;
+
+			// Precompute lowest bin for perf later
+			highestBinIndex = Math.min(highestBinIndex, i);
 		}
 	}
 
@@ -55,11 +73,11 @@ const startMic = async () => {
 		analyser.getByteFrequencyData(freqs);
 
 		let lastNoteIndex = 0;
-		for (let i = 0; i < analyserFrequencyBinCount; i++) {
+		for (let i = lowestBinIndex; i < highestBinIndex; i++) {
 			// Calculate the frequency for the current bin
 			const frequency = freqBinToFrequency[i];
 
-			if (!frequency) {
+			if (frequency <= 0) {
 				// Was it clipped in the precompute??
 				continue;
 			}
@@ -139,7 +157,7 @@ const startMic = async () => {
 
 		// Render notes from the active frequencies
 		// The top notes are highlighted in red
-		for (let i = 0; i < analyserFrequencyBinCount; i++) {
+		for (let i = lowestBinIndex; i < highestBinIndex; i++) {
 			// Calculate the frequency for the current bin
 			const frequency = freqBinToFrequency[i];
 

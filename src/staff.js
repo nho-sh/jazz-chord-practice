@@ -73,9 +73,14 @@ function prepareStaff() {
 
 		// State.ChordTonalDetails.notes = [ E Bb C# ... ]
 		for (const n of State.ChordTonalDetails.notes) {
+			const simpleN = Tonal.Note.simplify(n);
+
 			// Calculate how many Y-axis offsets we need from the low C
 			let currentNoteOffset = ConstStaffRootNotes.find(
-				(rno) => rno.name === n
+				// Sometimes, the tonal details contain double sharp or double flats
+				// Which the ConstStaffRootNotes does not have.
+				// Therefor, we simplify things like Ebb -> D to find the proper staff position
+				(rno) => rno.name === simpleN
 			).cLineOffset;
 
 			const prevNoteOffset = prevNote
@@ -101,29 +106,29 @@ function prepareStaff() {
 			svgStaff.appendChild(nel);
 			staffNotes.push({
 				el: nel,
-				note: n,
+				note: simpleN,
 			});
 
-			prevNote = n;
+			prevNote = simpleN;
 
 			// Accidentals
-			if (n.length > 2) {
+			if (simpleN.length > 2) {
 				// Do not know how to handle Xbb X##
 				continue;
 			}
 
 			// ♯♮♭
-			if (n[1] === "b" || n[1] === "#") {
+			if (simpleN[1] === "b" || simpleN[1] === "#") {
 				// start gathering accidental X+Y offset
 				const ael = makeAccidentalEl(
 					prevLineAccidental ? -1 : 0,
 					noteOffset,
-					n[1]
+					simpleN[1]
 				);
 				svgStaff.appendChild(ael);
 				staffNotes.push({
 					el: ael,
-					note: n,
+					note: simpleN,
 				});
 
 				// if previous cycle the accidental was already shifted
