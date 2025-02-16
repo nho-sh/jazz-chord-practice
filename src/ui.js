@@ -93,11 +93,31 @@ function initializeUI() {
 		State.TranspositionAmount.toString();
 	console.log("Transposition is " + State.TranspositionAmount);
 
+	let debugChordClicks = 0;
+	let debugChordClicksSince = null;
+
 	// Clicking the chord shows a alias for that chord
 	document.getElementById('chord').addEventListener('click', () => {
 		const newAlias = getChordAlias(State.Chord, true);
 		document.getElementById("chord").innerText = newAlias;
 		document.getElementById("chord").title = newAlias;
+
+		// Allow pressing the Chord title a few times and activate the debug view
+		const now = Date.now();
+		if (!debugChordClicksSince || debugChordClicksSince > now - 2*1000) {
+			debugChordClicksSince = now;
+			debugChordClicks += 1;
+
+			console.log('Debug enabling: ' + debugChordClicks)
+			if (debugChordClicks > 5) {
+				toggleDebug();
+				debugChordClicks = null;
+			}
+		}
+		else {
+			debugChordClicks = 0;
+			debugChordClicksSince = null;
+		}
 	});
 
 	document.addEventListener("keypress", function (event) {
@@ -117,10 +137,20 @@ function initializeUI() {
 		}
 
 		if (State.Debug) {
-			if (["C", "D", "E", "F", "G", "A", "B"].includes(event.key)) {
-				updatePlayingNote(event.key);
-				updatePlayingNote(event.key + "#");
-				updatePlayingNote(event.key + "b");
+			if (["1", "2", "3", "4", "5", "6", "7"].includes(event.key)) {
+				const position = parseInt(event.key, 10);
+				const chordNote = State.ChordNotes[position - 1]; // Gb
+
+				const reverseTransposedNote = Tonal.Note.transpose(
+					Tonal.Note.enharmonic(
+						State.ChordNotes[position - 1]
+					),
+					Tonal.Interval.fromSemitones(-State.TranspositionAmount)
+				);
+
+				updatePlayingNote(
+					reverseTransposedNote + '2'
+				);
 			}
 		}
 	});

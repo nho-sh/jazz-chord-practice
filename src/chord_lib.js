@@ -19,12 +19,16 @@ const ChordLib = {
 	// All songs are in C, will be transposed as needed
 	// Sorted alphabetically
 	autumn_leaves: "A-7 B7 B7b9 Cmaj7 D-7 D7 Db7 E- E-7 Eb9 F#-7b5 Gmaj7",
+	cold_duck_time: "Bb7 Dbmaj7 Ebmaj7 F7",
 	doxy: "Ab7 Bb Bb7 C-7 C7 Eb7 E° F-7 F7 Faug7 G7",
+	i_remember_clifford: "A-7b5 A7b9 Ab-7 Abmaj7 A° Bb Bb+7 Bb-7 Bb7 Bb7alt Bb7b9 Bb7sus4 B°7 C-7 C7 C7b9 D-7b5 D7b9 E-7b5 Eb6 Ebmaj7 F F-7 G+7 G-7 G-7b5 G7 G7/B G7b9 Gb-7",
 	in_a_sentimental_mood:
 		"A7 Ab7 Bb-7 Bb7 C7 C7b9 D- D-6 D-7 D-maj7 D7 Dbmaj7 Eb-7 Eb7 Fmaj7 G- G-6 G-7 G-maj7 Gb7",
 	misty: "A-7 Ab-7 Abmaj7 Bb-7 Bb7 C-7 C7 C7b9 D7 Db7 Eb6 Eb7 Eb7b9 Ebmaj7 F-7 F7 G-7 G-7b5",
 	moanin: "Ab9 B9 Bb Bb-9 C7 C7#9 Cm7b5 F F7b9 G-7 G7b9 Gm7b5",
+	saint_james_infirmary: "A7 B Bb7 Bm7 C C# Cdim Dm E Em7b5 F G",
 	st_thomas: "A7 Bb7 C C7 D-7 Dm7b5 E-7 Em7b5 F F#° G+7 G7",
+	straight_no_chaser: "Am7 Bb7 C7 D7 F7 G-7",
 	summertime: "A- A7 B-7 B7 Bb7 C D- D7 E7 F#-7 F7",
 	take_five: "Ab-6 Ab-7 Bb-7 Bb7 Cbmaj7 Db7 Eb- Eb-7 F-7 Gbmaj7",
 	take_the_a_train: "C D-7 D7 D7b5 F G7 G7b9",

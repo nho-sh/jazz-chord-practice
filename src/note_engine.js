@@ -72,16 +72,16 @@ function transposeNoteOfOctave(note) {
 	if (transpositionAmount !== 0) {
 		// Transpose the incoming perceived note,
 		// to the desired display note
-		const transpositionIdx =
-			Notes.findIndex((f) => f.note === note) + transpositionAmount;
+		const untransposedNoteIndex =
+			Notes.findIndex((f) => f.note === note || f.note === Tonal.Note.enharmonic(note));
 
-		if (!Notes[transpositionIdx]) {
+		if (!Notes[untransposedNoteIndex]) {
 			// transposition puts us outside the range of the calculated note frequencies
 			// must be really high or low note, do not care
 			return null;
 		}
 
-		return Notes[transpositionIdx].note;
+		return Notes[untransposedNoteIndex + transpositionAmount].note;
 	}
 
 	// not transposed

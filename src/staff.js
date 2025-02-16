@@ -37,10 +37,10 @@ function prepareStaff() {
 				"text"
 			);
 
-			const accidental = text === "b" ? "♭" : "♯";
+			const accidental = text.replaceAll("b", "♭").replaceAll('#', "♯");
 
-			let xCorrection = text === "#" ? 0 : 0;
-			let yCorrection = text === "#" ? 8 : 8;
+			let xCorrection = text[0] === "#" ? 0 : 0;
+			let yCorrection = text[0] === "#" ? 8 : 8;
 
 			// <text x="50" y="55" font-family="Arial" font-size="30" fill="black">Your Text Here</text>
 			accidentalEl.setAttribute("class", "accidental");
@@ -65,22 +65,13 @@ function prepareStaff() {
 		let prevLineCOffset = null;
 		let prevLineAccidental = false;
 
-		const rootNoteOffset = ConstStaffRootNotes.find(
-			(rno) => rno.name === State.ChordTonalDetails.notes[0]
-		).cLineOffset;
-
 		let noteOffset = 0;
 
 		// State.ChordTonalDetails.notes = [ E Bb C# ... ]
 		for (const n of State.ChordTonalDetails.notes) {
-			const simpleN = Tonal.Note.simplify(n);
-
 			// Calculate how many Y-axis offsets we need from the low C
 			let currentNoteOffset = ConstStaffRootNotes.find(
-				// Sometimes, the tonal details contain double sharp or double flats
-				// Which the ConstStaffRootNotes does not have.
-				// Therefor, we simplify things like Ebb -> D to find the proper staff position
-				(rno) => rno.name === simpleN
+				(rno) => rno.name === n
 			).cLineOffset;
 
 			const prevNoteOffset = prevNote
@@ -106,29 +97,25 @@ function prepareStaff() {
 			svgStaff.appendChild(nel);
 			staffNotes.push({
 				el: nel,
-				note: simpleN,
+				note: n,
 			});
 
-			prevNote = simpleN;
+			prevNote = n;
 
 			// Accidentals
-			if (simpleN.length > 2) {
-				// Do not know how to handle Xbb X##
-				continue;
-			}
 
 			// ♯♮♭
-			if (simpleN[1] === "b" || simpleN[1] === "#") {
+			if (n[1] === "b" || n[1] === "#") {
 				// start gathering accidental X+Y offset
 				const ael = makeAccidentalEl(
 					prevLineAccidental ? -1 : 0,
 					noteOffset,
-					simpleN[1]
+					n.substring(1)
 				);
 				svgStaff.appendChild(ael);
 				staffNotes.push({
 					el: ael,
-					note: simpleN,
+					note: n,
 				});
 
 				// if previous cycle the accidental was already shifted
@@ -220,8 +207,10 @@ function updatePlayingNote(inputNote) {
 				(note === inputNote ? "" : " (transposed from " + inputNote + ")")
 		);
 
+		const chordNoteToDoEnharmonic = Tonal.Note.enharmonic(chordNoteToDo.note);
+
 		staffNotes.forEach((sn) => {
-			if (sn.note === chordNoteToDo.note) {
+			if (sn.note === chordNoteToDo.note || sn.note === chordNoteToDoEnharmonic) {
 				sn.el.style.visibility = "visible";
 			}
 		});

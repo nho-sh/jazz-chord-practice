@@ -19,89 +19,48 @@ const ConstStaffRootNotes = [
 		cLineOffset: 0,
 	},
 	{
-		name: "Cb",
-		cLineOffset: 0,
-	},
-	{
-		name: "C#",
-		cLineOffset: 0,
-	},
-
-	{
 		name: "D",
 		cLineOffset: 1,
 	},
-	{
-		name: "Db",
-		cLineOffset: 1,
-	},
-	{
-		name: "D#",
-		cLineOffset: 1,
-	},
-
 	{
 		name: "E",
 		cLineOffset: 2,
 	},
 	{
-		name: "Eb",
-		cLineOffset: 2,
-	},
-	{
-		name: "E#",
-		cLineOffset: 2,
-	},
-
-	{
 		name: "F",
 		cLineOffset: 3,
 	},
-	{
-		name: "Fb",
-		cLineOffset: 3,
-	},
-	{
-		name: "F#",
-		cLineOffset: 3,
-	},
-
 	{
 		name: "G",
 		cLineOffset: 4,
 	},
 	{
-		name: "Gb",
-		cLineOffset: 4,
-	},
-	{
-		name: "G#",
-		cLineOffset: 4,
-	},
-
-	{
 		name: "A",
 		cLineOffset: 5,
 	},
 	{
-		name: "Ab",
-		cLineOffset: 5,
-	},
-	{
-		name: "A#",
-		cLineOffset: 5,
-	},
-
-	{
 		name: "B",
 		cLineOffset: 6,
 	},
+].flatMap((el) => [
 	{
-		name: "Bb",
-		cLineOffset: 6,
+		name: el.name + '',
+		cLineOffset: el.cLineOffset,
 	},
 	{
-		name: "B#",
-		cLineOffset: 6,
+		name: el.name + 'b',
+		cLineOffset: el.cLineOffset,
 	},
-];
+	{
+		name: el.name + 'bb',
+		cLineOffset: el.cLineOffset,
+	},
+	{
+		name: el.name + '#',
+		cLineOffset: el.cLineOffset,
+	},
+	{
+		name: el.name + '##',
+		cLineOffset: el.cLineOffset,
+	},
+]);
