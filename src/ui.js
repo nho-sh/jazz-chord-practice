@@ -124,7 +124,7 @@ function initializeUI() {
 		State.LastInteraction = Date.now();
 
 		// Keyboard shortcut to start again
-		// TODO: do not allow this, if displaying 'Great!'
+		// TODO: do not allow this, if displaying 'greatMsg'
 		//       because it will reset 2x shortly
 		if (event.key === " ") {
 			recreate();

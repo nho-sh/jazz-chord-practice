@@ -135,6 +135,8 @@ function initializeStaff() {
 
 let lastRenderedNote = "n/a"; // C Bb ...
 
+const greatMsg = [ '🎉', '🥳', '🤩', '💥', '💯', '💪', '🎊', '🪇', '👍', '🫸🫷' ];
+
 /**
  * note : C Bb ...
  **/
@@ -223,7 +225,7 @@ function updatePlayingNote(inputNote) {
 		}).length;
 		if (unplayedCount === 0) {
 			// TODO block input, and reset in a cleaner way
-			document.getElementById("chord").innerText = "Great!";
+			document.getElementById("chord").innerText = greatMsg[Math.floor(greatMsg.length * Math.random())];
 
 			setTimeout(() => {
 				prepareStaff();
