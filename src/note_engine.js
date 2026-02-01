@@ -27,7 +27,9 @@ function calculateNoteFrequencies(startNote = "C1", endNote = "B11") {
 		}
 
 		lastNote = {
-			note: `${note}${octave}`,
+			note,
+			octave,
+			note_octave: `${note}${octave}`,
 			start: Math.sqrt(frequency * lastNote.freq),
 			freq: frequency,
 			end: null,
@@ -66,14 +68,14 @@ function calculateNoteFrequencies(startNote = "C1", endNote = "B11") {
 const Notes = calculateNoteFrequencies();
 
 // Input G#3 -> ...
-function transposeNoteOfOctave(note) {
+function transposeNoteOfOctave(note_octave) {
 	const transpositionAmount = State.TranspositionAmount;
 
 	if (transpositionAmount !== 0) {
 		// Transpose the incoming perceived note,
 		// to the desired display note
 		const untransposedNoteIndex =
-			Notes.findIndex((f) => f.note === note || f.note === Tonal.Note.enharmonic(note));
+			Notes.findIndex((f) => f.note_octave === note_octave || f.note_octave === Tonal.Note.enharmonic(note_octave));
 
 		if (!Notes[untransposedNoteIndex]) {
 			// transposition puts us outside the range of the calculated note frequencies
@@ -81,11 +83,11 @@ function transposeNoteOfOctave(note) {
 			return null;
 		}
 
-		return Notes[untransposedNoteIndex + transpositionAmount].note;
+		return Notes[untransposedNoteIndex + transpositionAmount].note_octave;
 	}
 
 	// not transposed
-	return note;
+	return note_octave;
 }
 
 // Input C + 1 -> C#

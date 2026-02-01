@@ -109,7 +109,8 @@ div.debug-2 {
 .back {
 	transform: rotateY(180deg); /* Position the back face */
 	font-family: sans-serif;
-	padding: 0.5em;
+	padding: 0 0.5em;
+	width: 280px; /* msaller to account for padding making it wider*/
 }
 
 .chord {
@@ -135,7 +136,7 @@ div.debug-2 {
 form {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 7px;
 }
 
 input,
@@ -186,6 +187,7 @@ select {
 
 .difficulty-buttons {
 	text-align: center;
+	font-size: 0.6em;
 }
 /* Button-style Toggle */
 .toggle-button {
@@ -202,6 +204,17 @@ select {
 	font-size: 24px;
 }
 
+#chord_summary {
+	font-size: 0.65em;
+	font-style: italic;
+	margin-top: 0.3em;
+
+	/* do not overflow on multiple lines if its a lot of chords */
+	overflow: hidden;
+    max-height: 1em;
+    text-overflow: ellipsis;
+}
+
 /* Highlighted Style for the Button when Enabled */
 .toggle-button.active {
 	background-color: #7d4caf;
@@ -213,7 +226,7 @@ select {
 }
 
 .transposition-container {
-	margin-top: 1em;
+	margin-top: 0.7em;
 }
 
 

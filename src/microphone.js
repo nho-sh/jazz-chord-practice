@@ -1,4 +1,5 @@
-const currentnote = document.getElementById("currentnote");
+const currentnoteEl = document.getElementById("currentnote");
+const topnotesEl = document.getElementById("topnotes");
 
 const startMic = async () => {
 	const stream = await navigator.mediaDevices.getUserMedia({
@@ -102,6 +103,7 @@ const startMic = async () => {
 	};
 
 	const minVol = 80;
+	let maxRegisteredVolume = 0; // Live discover microphone range
 
 	let notesWithAnyVolume;
 	let loudestNote;
@@ -130,7 +132,7 @@ const startMic = async () => {
 			{ volume: 0 }
 		);
 
-		// Sort notes by volume in descending order and pick the top 5
+		// Sort notes by volume in descending order and pick the top
 		return (
 			notesWithAnyVolume
 				.filter((note) => note.totvolumecount > 0)
@@ -138,7 +140,7 @@ const startMic = async () => {
 				// compared to the loudest
 				.filter((note) => note.volume >= loudestNote.volume * 0.3)
 				.sort((a, b) => b.volume - a.volume)
-				.slice(0, 10)
+				.slice(0, 6)
 		);
 	};
 
@@ -149,6 +151,12 @@ const startMic = async () => {
 		if (!State.Debug) {
 			return;
 		}
+
+		// No update to the input? Dont waste time on cpu
+		if (!topNotes?.[0] || topNotes[0].volume < maxRegisteredVolume * 0.3) {
+			return;
+		}
+
 		const { width, height } = canvasSpectrum;
 
 		canvasSpectrumContext.clearRect(0, 0, width, height);
@@ -222,44 +230,53 @@ const startMic = async () => {
 
 			topNotes = getTopNotes();
 
-			if (topNotes.length > 2) {
-				// Harmonic detection
-				// Of all the top 10 notes, check which of the notes
-				// overtones are also in the topNotes. That note
-				// is most likely the fundamental being played
+			// update max
+			if (topNotes[0]) {
+				maxRegisteredVolume = Math.max(maxRegisteredVolume, topNotes[0].volume);
+			}
 
-				let overtoneMatches = 0;
+			if (topNotes.length > 2) {
 				let bestNote = null;
 
-				topNotes.forEach((topNote) => {
-					let otMatches = 0;
-					for (const overtone of topNote.overtones) {
-						if (topNotes.includes(overtone)) {
-							otMatches++;
-						} else {
-							// if a consecutive overtone does not match
-							// then its not realistic this note is important
-							break;
+				// METHOD 1
+				// Top loudest notes are the same
+				// Works best with strings
+				if (topNotes[0].note === topNotes[1].note && topNotes[1].volume > maxRegisteredVolume * 0.5) {
+					bestNote = topNotes[0];
+				}
+
+				if (!bestNote) {
+					// METHOD 2
+					// Harmonic detection
+					// Works best for instruments like woodwinds
+					// Of all the top notes, check which of the notes
+					// overtones are also in the topNotes. That note
+					// is most likely the fundamental being played
+
+					let overtoneMatches = 0;
+					
+					topNotes.forEach((topNote) => {
+						let otMatches = 0;
+						for (const overtone of topNote.overtones) {
+							if (topNotes.includes(overtone)) {
+								otMatches++;
+							} else {
+								// if a consecutive overtone does not match
+								// then its not realistic this note is important
+								continue;
+							}
 						}
-					}
-
-					if (otMatches >= overtoneMatches) {
-						overtoneMatches = otMatches;
-						bestNote = topNote;
-					}
-				});
-
-				if (State.Debug && bestNote) {
-					currentVolumeEl.innerText =
-						"Volume: " + Math.round(bestNote.volume);
-
-					// TODO: also show the #/b alternative
-					currentnote.innerText = transposeNoteOfOctave(bestNote.note);
+						
+						if (otMatches >= overtoneMatches) {
+							overtoneMatches = otMatches;
+							bestNote = topNote;
+						}
+					});
 				}
 
 				// No not found? Or almost no overtones found?
 				// Not a real note
-				if (!bestNote || overtoneMatches <= 1) {
+				if (!bestNote /* || overtoneMatches <= 1 */) {
 					resetMatchedNote();
 				}
 				// Only accept note if it is been played
@@ -270,7 +287,17 @@ const startMic = async () => {
 				} else if (Date.now() - currentNoteSince > 200) {
 					currentNoteSince = Date.now();
 
-					updatePlayingNote(bestNote.note);
+					updatePlayingNote(bestNote.note_octave);
+				}
+
+				if (State.Debug && bestNote) {
+					currentVolumeEl.innerText =
+						"Volume: " + Math.round(bestNote.volume);
+
+					// TODO: also show the #/b alternative
+					currentnoteEl.innerText = transposeNoteOfOctave(bestNote.note_octave);
+
+					topnotesEl.innerText = topNotes.map((n) => n.note_octave).join(" ");
 				}
 			} else {
 				resetMatchedNote();

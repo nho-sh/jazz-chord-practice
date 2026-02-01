@@ -214,6 +214,14 @@ function isIdle(idleTimeMs = 30e3) {
 	return false;
 }
 
+// Adjust the list of chords a difficult/song might ask
+function prepareChordSummary() {
+	const allPossibleChords = ChordLib[State.Difficulty].join(' ');
+
+	const chord_summaryEl = document.getElementById('chord_summary');
+	chord_summaryEl.innerHTML = '&nbsp; ' + allPossibleChords;
+}
+
 function showHelp() {
 	State.Listen = false;
 	document.getElementById("help").style.visibility = "visible";

@@ -36,6 +36,8 @@ function initializeState() {
 
 		prepareStaff();
 
+		prepareChordSummary();
+
 		// show chord to user in the title
 		chordEl.innerText = State.Chord;
 		chordEl.title = State.ChordTonalDetails.name;
