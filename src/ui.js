@@ -24,6 +24,18 @@ function flipUserInterface() {
 
 function initializeUI() {
 	State.Difficulty = getSetting("difficulty") || "1";
+	
+	// Populate the song chords select from SONG_DEFINITIONS
+	const selectSongChords = document.getElementById("selectSongChords");
+
+	// Add song options from SONG_DEFINITIONS
+	SONG_DEFINITIONS.forEach((song) => {
+		const option = document.createElement("option");
+		option.value = song.key;
+		option.textContent = song.title;
+		selectSongChords.appendChild(option);
+	});
+	
 	const prefix = "toggleDifficulty";
 	const clearDifficulty = () => {
 		for (let i = 1; i <= 7; i++) {
